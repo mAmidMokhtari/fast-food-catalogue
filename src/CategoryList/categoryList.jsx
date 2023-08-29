@@ -1,9 +1,7 @@
-import { FC } from "react";
-
 import Loading from "../Loading/loading";
 import useAxios from "../useAxios";
 
-const CategoryList: FC = ({ filterItems, children }) => {
+const CategoryList = ({ filterItems, children }) => {
   const [categories, , loading] = useAxios({
     method: "GET",
     url: "/FoodCategory/categories",
