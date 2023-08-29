@@ -1,43 +1,27 @@
 import "./App.css";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import notFound from "./assets/images/404.png";
-import axios from "./axios";
 import CategoryList from "./CategoryList/categoryList";
 import FastFoodList from "./FastFoodList/fastFoodList";
 import Header from "./Header/header";
 import Loading from "./Loading/loading";
 import SearchBar from "./SearchBar/searchBar";
+import useAxios from "./useAxios";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [fastFoodItems, setFastFoodItems] = useState([]);
-
-  const fetchData = async (categoryId = null) => {
-    setLoading(true);
-    const response = await axios.get(
-      `/FastFood/list/${categoryId ? "?categoryId=" + categoryId : ""}`
-    );
-    setLoading(false);
-    setFastFoodItems(response.data);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [url, setUrl] = useState("/FastFood/list/");
+  const [fastFoodItems, , loading] = useAxios({
+    url,
+  });
 
   const filterItems = (categoryId) => {
-    fetchData(categoryId);
+    setUrl(`/FastFood/list/${categoryId ? "?categoryId=" + categoryId : ""}`);
   };
 
   const searchItems = async (term) => {
-    setLoading(true);
-    const response = await axios.get(
-      `/FastFood/search/${term ? "?term=" + term : ""}`
-    );
-    setLoading(false);
-    setFastFoodItems(response.data);
+    setUrl(`/FastFood/search/${term ? "?term=" + term : ""}`);
   };
 
   const renderContent = () => {
@@ -50,7 +34,7 @@ function App() {
           <div className="alert alert-warning text-center">
             برای کلید واژه فوق هیچ آیتمی یافت نشد
           </div>
-          <img className="mx-auto mt-5 d-block" src={notFound} />
+          <img className="mx-auto mt-5 d-block fade-in-horiz" src={notFound} />
         </>
       );
     }
